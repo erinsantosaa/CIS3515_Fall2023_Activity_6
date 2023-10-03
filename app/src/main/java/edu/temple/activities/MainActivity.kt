@@ -15,7 +15,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        val lyricsDisplayTextView = findViewById<TextView>(R.id.lyricsDisplayTextView)
 
         // Create array of integers that are multiples of 5
         // Verify correctness by examining array values.
@@ -26,12 +25,9 @@ class MainActivity : AppCompatActivity() {
         with (findViewById(R.id.textSizeSelectorRecyclerView) as RecyclerView) {
 
             // TODO Step2: Implement lambda body to launch new activity and pass value
-            val callBack = {item: Int ->
-                lyricsDisplayTextView.setTextSize(item.toFloat())
-            }
-
-            adapter = TextSizeAdapter(textSizes){
-                val launchIntent = Intent(this@MainActivity, DisplayActivity::java)
+            adapter = TextSizeAdapter(textSizes){ selectedSize ->
+                val launchIntent = Intent(this@MainActivity, DisplayActivity::class.java)
+                launchIntent.putExtra("textSize", selectedSize.toFloat())
                 startActivity(launchIntent)
             }
             layoutManager = LinearLayoutManager(this@MainActivity)
@@ -42,7 +38,7 @@ class MainActivity : AppCompatActivity() {
 
 /* Convert to RecyclerView.Adapter */
 class TextSizeAdapter (private val textSizes: Array<Int>, callback: (Int)->Unit) : RecyclerView.Adapter<TextSizeAdapter.TextSizeViewHolder>() {
-
+    val callback = callback
     // TODO Step 1: Complete onClickListener to return selected number
     inner class TextSizeViewHolder(val textView: TextView) : RecyclerView.ViewHolder (textView) {
         init {
